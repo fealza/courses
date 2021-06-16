@@ -1,16 +1,14 @@
-class scheme_course
-{
- 
-
-}
-
 class course
 {
- 
+  id=0;
+  current=false;
+  state = 1;
  constructor(name)
  {
   this.name=name
  } 
+
+ 
 
  add_description(name)
  {
@@ -19,7 +17,25 @@ class course
 
  print()
  {
-   $("#container").append('<div class=init_item><a href=#>'+this.name+'</a></div>');
+   var dest = '';
+   if (this.state == 1)
+   { 
+    dest = '<div><p>'+this.description+'</p></div>';
+   }
+   var st='class="init_item';
+   if (this.current)
+   {
+     st+=' init_current';
+   }
+   st+='"';
+   $("#panel").append('<div '+st+' ><div><a href=# onclick=course_collect.go('+this.id+') >'+this.name+'</a></div>'+dest+'</div>');
+
+
+ }
+
+ set_state(state)
+ {
+   this.state=state;
  }
 
 }
@@ -30,10 +46,19 @@ class course_collection{
   this.data = Array()
  }
 
+ set_state(state)
+ {
+   this.data.forEach(element => {
+     element.set_state(state)
+   })
+ }
+
+
  add(cs)
  {
   this.count++;   
   this.data.push(cs)
+  cs.id=this.data.length
  }
  
   print()
@@ -41,6 +66,22 @@ class course_collection{
    this.data.forEach(element => {
        element.print();
    });
+  }
+
+  go(id)
+  {
+    $('#panel').empty();
+    this.set_state(2);
+    this.data.forEach(element => {
+      element.current = false;
+    })
+    this.data[(id-1)].current=true;
+
+    $('#panel').animate({width:"30%"},700,"swing",function()
+    {
+     course_collect.print();
+
+     });
   }
  
 }
@@ -57,7 +98,7 @@ cs2.add_description('Курс по изучению остров Linux')
 course_collect.add(cs2);
 
 cs3 = new course('Course 3: Cisco');
-cs2.add_description('Курс по изучению остров Cisco')
+cs3.add_description('Курс по изучению остров Cisco')
 
 course_collect.add(cs3);
 

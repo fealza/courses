@@ -2,10 +2,38 @@ body{
     background-color:darkgray;
 }
 
-.init_item {
-
+#container{
+    width: 100%;
 }
 
-.init_item a{
+#panel {
+ width: 60%;
+ 
+ overflow: hidden;
+}
+
+.init_item {
+ width:90%;
+ background-color:azure;
+ margin:5px 2px;
+ padding: 10px 10px;
+ border-radius: 5px;
+}
+
+.init_item div a{
     text-decoration: none;
+}
+
+.init_item div p {
+    padding-left: 10px;
+    font-size: 0.9em;
+}
+
+.init_current{
+    background-color:green;
+}
+
+.init_current div a {
+    color:white;
+
 }
