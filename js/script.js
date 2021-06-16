@@ -4,6 +4,7 @@ class device
   canva = null;
   x = 0;
   y = 0;
+  imgs_id='img_'+this.id;
   constructor(name,image,x,y)
   {
    this.name = name;
@@ -12,17 +13,22 @@ class device
    this.y = y;
    var img = new Image();
    img.src = image;
+   img.id = 'img_'+this.id;
    img.onload = function()
     {
       context.drawImage(img,this.x,this.y);
     }
-    console.log(img);
   }
+
   
-  print()
+  destroy()
   {
-    /**return '<a href=# ><image src='+this.image+' /></a>';**/
-    
+    var elem=document.getElementById(this.imgs_id);
+    elem.remove();
+  }
+
+  print()
+  {    
   }
 
 }
@@ -59,22 +65,31 @@ class course
   current = false;
   state = 1;
   devices = null;
+  canva = null;
 
  constructor(name,canva)
  {
-  this.name=name;
-  this.devices = new device_collection(canva);
+  this.name = name;
+  this.canva = canva;
  } 
 
  load_course()
  {
+  this.devices = new device_collection(this.canva);
    this.devices.add(new device('tmp','images/Firewall.png',10,10));
-   
  }
 
  add_description(name)
  {
      this.description=name
+ }
+
+ destroy()
+ {
+  this.devices.forEach(element => {
+     element.destroy();
+  })
+
  }
 
  print()
@@ -105,7 +120,7 @@ class course
 class course_collection
 {
   
-
+ old_id = null;
  constructor(cn)
  {
   this.data = Array()
@@ -140,9 +155,11 @@ class course_collection
     this.set_state(2);
     this.data.forEach(element => {
       element.current = false;
+      if (element.id == this.old_id) {element.destroy();}
     })
     this.data[(id-1)].current=true;
     this.data[(id-1)].load_course();
+    this.old_id = (id -1);
     $('#panel').animate({width:"30%"},700,"swing",function()
     {
      course_collect.print();
