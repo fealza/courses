@@ -8,8 +8,16 @@ body{
 
 #panel {
  width: 60%;
- 
+ float:left;
  overflow: hidden;
+}
+
+#content {
+    width:60%;
+    float:left;
+    border:1px solid gray;
+    padding:5px 5px;
+    display: block;
 }
 
 .init_item {

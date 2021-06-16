@@ -1,14 +1,76 @@
+class device
+{
+  id = 0;
+  canva = null;
+  x = 0;
+  y = 0;
+  constructor(name,image,x,y)
+  {
+   this.name = name;
+   this.image = image;
+   this.x = x;
+   this.y = y;
+   var img = new Image();
+   img.src = image;
+   img.onload = function()
+    {
+      context.drawImage(img,this.x,this.y);
+    }
+    console.log(img);
+  }
+  
+  print()
+  {
+    /**return '<a href=# ><image src='+this.image+' /></a>';**/
+    
+  }
+
+}
+
+
+class device_collection
+{
+  data=[]
+  canva = null;
+  constructor(canva)
+  {
+    this.canva = canva;
+  }
+
+  add(dv)
+  {
+    this.data.push(dv);
+    dv.id = this.data.length;
+  }
+
+  print()
+  {
+    var result='';
+    this.data.forEach(element => {
+      result+=element.print();
+    })
+    return result;
+  }
+}
+
 class course
 {
-  id=0;
-  current=false;
+  id = 0;
+  current = false;
   state = 1;
- constructor(name)
+  devices = null;
+
+ constructor(name,canva)
  {
-  this.name=name
+  this.name=name;
+  this.devices = new device_collection(canva);
  } 
 
- 
+ load_course()
+ {
+   this.devices.add(new device('tmp','images/Firewall.png',10,10));
+   
+ }
 
  add_description(name)
  {
@@ -40,10 +102,14 @@ class course
 
 }
 
-class course_collection{
- constructor()
+class course_collection
+{
+  
+
+ constructor(cn)
  {
   this.data = Array()
+  this.canvas_context=cn;
  }
 
  set_state(state)
@@ -76,18 +142,25 @@ class course_collection{
       element.current = false;
     })
     this.data[(id-1)].current=true;
-
+    this.data[(id-1)].load_course();
     $('#panel').animate({width:"30%"},700,"swing",function()
     {
      course_collect.print();
-
+ 
      });
   }
  
 }
 
+var canvas = document.getElementById("canvas");
+if (canvas != null) 
+{
+ var context = canvas.getContext("2d");
+} else { alert('не удалась иницилизация Canvas ')}
 
-course_collect = new course_collection();
+ 
+
+course_collect = new course_collection(context);
 cs1 = new course('Course 1: Windows ');
 cs1.add_description('Курс по изучению остров Windows')
 course_collect.add(cs1);
@@ -110,5 +183,6 @@ console.log(course_collect)
 
 function onload()
 {
+    
     course_collect.print();   
 }
